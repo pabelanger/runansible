@@ -26,8 +26,7 @@ __version__ = pbr.version.VersionInfo('runansible').version_string()
 
 class AnsibleRunner(object):
 
-    def __init__(self, workingdir=None):
-        self.workingdir = workingdir
+    def __init__(self):
         self.root = tempfile.mkdtemp()
         os.makedirs(self.git_root)
         self.ansible_root = os.path.join(self.root, 'ansible')
@@ -64,7 +63,7 @@ class AnsibleRunner(object):
             config.write('[defaults]\n')
             config.write('hostfile = %s\n' % self.inventory)
 
-    def run(self, jobdir):
+    def run(self):
         proc = subprocess.Popen(
             ['ansible-playbook', self.playbook],
             cwd=self.ansible_root,
