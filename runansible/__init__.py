@@ -52,13 +52,26 @@ class AnsibleRunner(object):
         shutil.copy(playbook_path, self.playbook)
 
     def prepare_files(self, hostlist):
+        '''Write out inventory.
+
+        :param hostlist: List of tuples
+        '''
+        group_mapping = defaultdict([])
         with open(self.inventory, 'w') as inventory:
-            for host_name, host_vars in hostlist:
+            for host_name, host_groups, host_vars in hostlist:
                 inventory.write(host_name)
                 inventory.write(' ')
                 for k, v in host_vars.items():
                     inventory.write('%s=%s' % (k, v))
                 inventory.write('\n')
+                for group in host_groups:
+                    role_mapping[group].append(host_name)
+            for group, hosts in group_mapping.items():
+                inventory.write('[%s]\n' % group)
+                for host in hosts:
+                    inventory.write('%s\n' % host)
+                inventory.write('\n')
+
         with open(self.config, 'w') as config:
             config.write('[defaults]\n')
             config.write('hostfile = %s\n' % self.inventory)
