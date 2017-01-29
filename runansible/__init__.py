@@ -19,8 +19,6 @@ import tempfile
 
 import pbr.version
 
-from runansible import rundir
-
 __version__ = pbr.version.VersionInfo('runansible').version_string()
 
 
